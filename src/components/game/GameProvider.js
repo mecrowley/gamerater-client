@@ -56,7 +56,7 @@ export const GameProvider = (props) => {
         })
             .then(response => response.json())
     }
-
+    
     const createGameCategory = (gameCategory) => {
         return fetch("http://localhost:8000/gamecategories", {
             method: "POST",
@@ -66,12 +66,45 @@ export const GameProvider = (props) => {
             },
             body: JSON.stringify(gameCategory)
         })
-            .then(response => response.json())
+        .then(response => response.json())
     }
     
+    const getGameRatingByUser = gameId => {
+        return fetch(`http://localhost:8000/gameratings/${gameId}/user_rating`, {
+            headers:{
+                "Authorization": `Token ${localStorage.getItem("user_token")}`
+            }
+        })
+            .then(response => response.json())
+    }
+
+    const createGameRating = gameRating => {
+        return fetch('http://localhost:8000/gameratings', {
+        method: "POST",    
+        headers:{
+                "Content-Type": "application/json",
+                "Authorization": `Token ${localStorage.getItem("user_token")}`
+            },
+            body: JSON.stringify(gameRating)
+        })
+        .then(response => response.json())
+    }
+
+    const updateGameRating = (gameRating) => {
+        return fetch(`http://localhost:8000/gameratings/${gameRating.id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Token ${localStorage.getItem("user_token")}`
+            },
+            body: JSON.stringify(gameRating)
+        })
+    }
 
     return (
-        <GameContext.Provider value={{ games, categories, getGames, getSingleGame, getCategories, getGameCategories, createGame, createGameCategory }} >
+        <GameContext.Provider value={{ games, categories, getGames, getSingleGame, getCategories,
+                                        getGameCategories, getGameRatingByUser, createGame, createGameCategory,
+                                        createGameRating, updateGameRating}} >
             { props.children }
         </GameContext.Provider>
     )
